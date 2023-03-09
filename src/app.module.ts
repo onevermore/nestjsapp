@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { BookmarkModule } from './bookmark/bookmark.module';
 import { CoursesModule } from './courses/courses.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypegooseModule } from 'nestjs-typegoose';
@@ -32,7 +31,6 @@ import { CrosswordModule } from './crossword/crossword.module';
     FilesModule,
     AuthModule,
     UserModule,
-    BookmarkModule,
     CoursesModule,
     TextsModule,
     VideosModule,
