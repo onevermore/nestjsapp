@@ -6,6 +6,7 @@ import { CoursesModel } from './courses.model';
 import { UserModule } from 'src/user/user.module';
 import { TextsModule } from 'src/texts/texts.module';
 import { FilesModule } from 'src/files/files.module';
+import { CrosswordModule } from 'src/crossword/crossword.module';
 
 @Module({
   controllers: [CoursesController],
@@ -21,6 +22,7 @@ import { FilesModule } from 'src/files/files.module';
     UserModule,
     TextsModule,
     FilesModule,
+    CrosswordModule,
   ],
   providers: [CoursesService],
   exports: [CoursesService],

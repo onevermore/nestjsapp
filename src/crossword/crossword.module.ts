@@ -19,5 +19,6 @@ import { CrosswordModel } from './crossword.model';
     UserModule,
   ],
   controllers: [CrosswordController],
+  exports: [CrosswordService],
 })
 export class CrosswordModule {}
