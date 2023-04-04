@@ -4,7 +4,13 @@ import { CoursesModel } from 'src/courses/courses.model';
 
 export interface CrosswordModel extends Base {}
 
-export class CrosswordData {
+export class Crossword {
+  @prop()
+  id: number;
+
+  @prop()
+  direction: string;
+
   @prop()
   clue: string;
 
@@ -18,33 +24,25 @@ export class CrosswordData {
   col: number;
 }
 
-export class Crossword {
-  @prop()
-  across: CrosswordData;
-
-  @prop()
-  down: CrosswordData;
-}
-
 export class CrosswordModel extends TimeStamps {
   @prop()
   title: string;
 
   @prop()
-  slug: string;
-
-  @prop()
   description: string;
-
-  @prop()
-  data: Crossword;
 
   @prop()
   level: string;
 
+  @prop()
+  data: Crossword[];
+
   @prop({ default: 1 })
   complexity: number;
 
-  @prop({ ref: () => CoursesModel, default: 'all' })
-  course?: Ref<CoursesModel> | 'all';
+  @prop()
+  slug: string;
+
+  @prop({ ref: () => CoursesModel })
+  course?: Ref<CoursesModel>;
 }

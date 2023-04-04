@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ModelType, DocumentType } from '@typegoose/typegoose/lib/types';
 import { Types } from 'mongoose';
 import { InjectModel } from 'nestjs-typegoose';
+import { CoursesService } from 'src/courses/courses.service';
 import { CreateTextDto } from './dto/create-text.dto';
 import { TextsModel } from './texts.model';
 
@@ -10,7 +11,9 @@ export class TextsService {
   constructor(
     @InjectModel(TextsModel)
     private readonly textsModel: ModelType<TextsModel>,
-  ) {}
+  ) // @Inject(forwardRef(() => CoursesService))
+  // private readonly courseService: CoursesService,
+  {}
 
   async getAllTexts(): Promise<any> {
     return this.textsModel.find().exec();
@@ -25,7 +28,13 @@ export class TextsService {
   ): Promise<DocumentType<TextsModel>[]> {
     return this.textsModel.find({ course: courseId }).exec();
   }
-
+  /*
+  async byCourse(
+    courseSlug: string,
+  ): Promise<DocumentType<TextsModel>[]> {
+    return this.textsModel.find({ course: courseId }).exec();
+  }
+*/
   async getById(textId: Types.ObjectId): Promise<DocumentType<TextsModel>> {
     return this.textsModel.findById(textId).exec();
   }
