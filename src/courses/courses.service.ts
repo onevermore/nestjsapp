@@ -60,6 +60,7 @@ export class CoursesService {
     const result = {
       _id: String(courseBySlug._id),
       title: courseBySlug.title,
+      level: courseBySlug.level,
       description: courseBySlug.description,
       texts: courseTexts,
       crosswords: courseCrosswords,
