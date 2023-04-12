@@ -30,6 +30,9 @@ export class CoursesService {
           {
             title: new RegExp(searchTerm, 'i'),
           },
+          /*   {
+            description: new RegExp(searchTerm, 'i'),
+          }*/
         ],
       };
     }
