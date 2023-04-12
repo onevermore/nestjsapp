@@ -19,8 +19,22 @@ export class CoursesService {
     private s3Manager: FilesService, // @Inject(FilesService) //  private s3Manager: FilesService,
   ) {}
 
-  async getCourses(): Promise<any> {
-    return this.coursesModel.find().exec();
+  async getAllCourses(
+    searchTerm?: string,
+  ): Promise<DocumentType<CoursesModel>[]> {
+    let options = {};
+
+    if (searchTerm) {
+      options = {
+        $or: [
+          {
+            title: new RegExp(searchTerm, 'i'),
+          },
+        ],
+      };
+    }
+
+    return this.coursesModel.find(options).exec();
   }
 
   async createEmptyCourseId(): Promise<Types.ObjectId> {
@@ -60,6 +74,7 @@ export class CoursesService {
     const result = {
       _id: String(courseBySlug._id),
       title: courseBySlug.title,
+      level: courseBySlug.level,
       description: courseBySlug.description,
       texts: courseTexts,
       crosswords: courseCrosswords,

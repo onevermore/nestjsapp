@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -9,8 +17,8 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  async getAll() {
-    return this.coursesService.getCourses();
+  async getAllCourses(@Query('searchTerm') searchTerm?: string) {
+    return this.coursesService.getAllCourses(searchTerm);
   }
 
   @ApiOperation({ summary: 'Create course' })
