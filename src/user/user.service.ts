@@ -20,14 +20,7 @@ export class UserService {
     const userByUsername = await this.userModel.findOne({ username }).exec();
     return userByUsername;
   }
-  /*
-	async update(
-		id: string,
-		dto: CreateMovieDto
-	): Promise<DocumentType<any> | null> {
-		return this.movieModel.findByIdAndUpdate(id, dto, { new: true }).exec()
-	}
-*/
+
   async uploadAvatar(
     file: Express.Multer.File,
     username: string,

@@ -49,5 +49,5 @@ export class CreateCrosswordDto {
   slug: string;
 
   @IsString()
-  course: string;
+  course?: string;
 }
