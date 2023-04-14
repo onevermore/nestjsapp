@@ -31,6 +31,7 @@ export class AuthService {
     const newUser = new this.UserModel({
       email,
       password: await hash(password, salt),
+      username: email.slice(0, email.indexOf('@')),
     });
     const user = await newUser.save();
 
@@ -92,6 +93,7 @@ export class AuthService {
       _id: user._id,
       email: user.email,
       isAdmin: user.isAdmin,
+      username: user.username,
     };
   }
 }
