@@ -54,6 +54,15 @@ export class TextsController {
   ) {
     return this.textsService.byCourse(courseId);
   }
+  /*
+  @Get('by-courses/:course')
+  async byCourseSlug(
+    @Body('courseSlug')
+    courseSlug: string,
+  ) {
+    return this.textsService.byCourseSlug(courseSlug);
+  }
+*/
 
   @UsePipes(new ValidationPipe())
   @Post()
