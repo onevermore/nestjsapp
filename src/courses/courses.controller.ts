@@ -17,8 +17,11 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  async getAllCourses(@Query('searchTerm') searchTerm?: string) {
-    return this.coursesService.getAllCourses(searchTerm);
+  async getAllCourses(
+    @Query('searchTerm') searchTerm?: string,
+    @Query('level') level?: string,
+  ) {
+    return this.coursesService.getAllCourses(searchTerm, level);
   }
 
   @ApiOperation({ summary: 'Create course' })
