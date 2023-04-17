@@ -21,23 +21,29 @@ export class CoursesService {
 
   async getAllCourses(
     searchTerm?: string,
+    level?: string,
   ): Promise<DocumentType<CoursesModel>[]> {
     let options = {};
 
-    if (searchTerm) {
+    const queryCond = {
+      ...(searchTerm && { title: new RegExp(searchTerm, 'i') }),
+      ...(level && { level }),
+    };
+
+    /*   if (searchTerm) {
       options = {
         $or: [
           {
             title: new RegExp(searchTerm, 'i'),
           },
-          /*   {
+             {
             description: new RegExp(searchTerm, 'i'),
-          }*/
+          }
         ],
       };
     }
-
-    return this.coursesModel.find(options).exec();
+*/
+    return this.coursesModel.find(queryCond).exec();
   }
 
   async createEmptyCourseId(): Promise<Types.ObjectId> {
