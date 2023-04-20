@@ -1,16 +1,21 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   Post,
+  Put,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { Types } from 'mongoose';
+import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CreateTextDto } from './dto/create-text.dto';
+import { IdValidationPipe } from './pipes/id.validation.pipe';
 import { TextsModel } from './texts.model';
 import { TextsService } from './texts.service';
 
@@ -73,4 +78,24 @@ export class TextsController {
 
   //@Get(':id')
   //async getTextById(@Param('id') id: string)
+
+  @UsePipes(new ValidationPipe())
+  @Put(':id')
+  @HttpCode(200)
+  @Auth('admin')
+  async update(
+    @Param('id', IdValidationPipe) id: string,
+    @Body() dto: CreateTextDto,
+  ) {
+    const updatedText = await this.textsService.update(id, dto);
+    if (!updatedText) throw new NotFoundException('Text not found');
+    return updatedText;
+  }
+
+  @Delete(':id')
+  @Auth('admin')
+  async delete(@Param('id', IdValidationPipe) id: string) {
+    const deletedDoc = await this.textsService.delete(id);
+    if (!deletedDoc) throw new NotFoundException('Text not found');
+  }
 }

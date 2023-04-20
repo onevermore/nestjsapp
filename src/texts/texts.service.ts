@@ -10,10 +10,8 @@ import { TextsModel } from './texts.model';
 export class TextsService {
   constructor(
     @InjectModel(TextsModel)
-    private readonly textsModel: ModelType<TextsModel>,
-  ) // @Inject(forwardRef(() => CoursesService))
-  // private readonly courseService: CoursesService,
-  {}
+    private readonly textsModel: ModelType<TextsModel>, // @Inject(forwardRef(() => CoursesService)) // private readonly courseService: CoursesService,
+  ) {}
 
   async getAllTexts(): Promise<any> {
     return this.textsModel.find().exec();
@@ -48,5 +46,16 @@ export class TextsService {
   ): Promise<DocumentType<TextsModel>[]> {
     console.log(complexity);
     return this.textsModel.find({ complexity: complexity }).exec();
+  }
+
+  async update(
+    id: string,
+    dto: CreateTextDto,
+  ): Promise<DocumentType<TextsModel> | null> {
+    return this.textsModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+  }
+
+  async delete(id: string): Promise<DocumentType<TextsModel> | null> {
+    return this.textsModel.findByIdAndDelete(id).exec();
   }
 }
