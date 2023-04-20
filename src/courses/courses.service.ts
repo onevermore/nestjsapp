@@ -30,19 +30,6 @@ export class CoursesService {
       ...(level && { level }),
     };
 
-    /*   if (searchTerm) {
-      options = {
-        $or: [
-          {
-            title: new RegExp(searchTerm, 'i'),
-          },
-             {
-            description: new RegExp(searchTerm, 'i'),
-          }
-        ],
-      };
-    }
-*/
     return this.coursesModel.find(queryCond).exec();
   }
 
@@ -102,5 +89,16 @@ export class CoursesService {
       JSON.stringify(user),
     );
     return user;
+  }
+
+  async update(
+    id: string,
+    dto: CreateCourseDto,
+  ): Promise<DocumentType<CoursesModel> | null> {
+    return this.coursesModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+  }
+
+  async delete(id: string): Promise<DocumentType<CoursesModel> | null> {
+    return this.coursesModel.findByIdAndDelete(id).exec();
   }
 }
