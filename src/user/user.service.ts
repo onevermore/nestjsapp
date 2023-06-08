@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ModelType, DocumentType } from '@typegoose/typegoose/lib/types';
 import { InjectModel } from 'nestjs-typegoose';
 import { FilesService } from 'src/files/files.service';
@@ -51,5 +51,26 @@ export class UserService {
       .exec();
     console.log(userImageURL);
     return userImageURL;
+  }
+
+  async checkUsernamesExist(usernames: string[]): Promise<void> {
+    const users = await this.userModel
+      .find({ username: { $in: usernames } })
+      .exec();
+    const existingUsernames = users.map((user) => user.username);
+
+    const missingUsernames = usernames.filter(
+      (username) => !existingUsernames.includes(username),
+    );
+    if (missingUsernames.length > 0) {
+      const missingUsernamesString = missingUsernames.join(', ');
+      throw new NotFoundException(`Users not found: ${missingUsernamesString}`);
+    }
+  }
+
+  async findUsersByUsername(
+    usernames: string[],
+  ): Promise<DocumentType<UserModel>[]> {
+    return this.userModel.find({ username: { $in: usernames } }).exec();
   }
 }

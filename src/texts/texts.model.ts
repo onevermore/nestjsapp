@@ -9,7 +9,7 @@ export class TextsModel extends TimeStamps {
   @prop()
   title: string;
 
-  @prop()
+  @prop({ unique: true })
   slug: string;
 
   @prop()

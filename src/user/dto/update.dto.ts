@@ -1,4 +1,12 @@
-import { IsEmail, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsString,
+  IsDate,
+  IsBoolean,
+  IsDateString,
+} from 'class-validator';
+import { Role } from '../enums/role.enum';
 
 export class UpdateDto {
   @IsEmail()
@@ -10,5 +18,12 @@ export class UpdateDto {
   @IsString()
   avatarURL?: string;
 
+  /* @IsBoolean()
   isAdmin?: boolean;
+*/
+@IsDateString()
+  birthdate: Date;
+
+  @IsArray()
+  roles: Role[];
 }

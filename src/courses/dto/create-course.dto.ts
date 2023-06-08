@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsBoolean, IsArray } from 'class-validator';
 
 export class CreateCourseDto {
   @IsString()
@@ -15,4 +15,14 @@ export class CreateCourseDto {
 
   @IsString()
   slug: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  allowedUsers?: string[];
+
+  @IsBoolean()
+  isPublic: boolean;
+
+  @IsString()
+  ownerId: string;
 }

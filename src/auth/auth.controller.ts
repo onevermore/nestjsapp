@@ -10,6 +10,7 @@ import {
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { AuthDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -31,13 +32,20 @@ export class AuthController {
 
   @UsePipes(new ValidationPipe())
   @Post('register')
-  async register(@Body() dto: AuthDto) {
+  async register(@Body() dto: RegisterDto) {
+   
+
+    const regData = {
+      ...dto,
+      birthdate: new Date(dto.birthdate),
+    };
+
     const oldUser = await this.AuthService.findByEmail(dto.email);
     if (oldUser)
       throw new BadRequestException(
         'User with this email is already in the system',
       );
 
-    return this.AuthService.register(dto);
+    return this.AuthService.register(regData);
   }
 }

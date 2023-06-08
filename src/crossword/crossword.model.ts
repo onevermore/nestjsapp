@@ -40,7 +40,7 @@ export class CrosswordModel extends TimeStamps {
   @prop({ default: 1 })
   complexity: number;
 
-  @prop()
+  @prop({ unique: true })
   slug: string;
 
   @prop({ ref: () => CoursesModel })
