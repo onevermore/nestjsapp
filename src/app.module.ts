@@ -11,6 +11,10 @@ import { FilesModule } from './files/files.module';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { awsConfig } from './config/s3.config';
 import { CrosswordModule } from './crossword/crossword.module';
+import { APP_GUARD } from '@nestjs/core';
+//import { RolesGuard } from './auth/guards/admin.guard2';
+import { DictionaryController } from './dictionary/dictionary.controller';
+import { DictionaryModule } from './dictionary/dictionary.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -35,8 +39,14 @@ import { CrosswordModule } from './crossword/crossword.module';
     CoursesModule,
     VideosModule,
     CrosswordModule,
+    DictionaryModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [DictionaryController],
+  providers: [
+    /*  {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },*/
+  ],
 })
 export class AppModule {}

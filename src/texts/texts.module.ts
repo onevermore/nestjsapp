@@ -5,6 +5,7 @@ import { TextsModel } from './texts.model';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { UserModule } from 'src/user/user.module';
 import { CoursesModule } from 'src/courses/courses.module';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   controllers: [TextsController],

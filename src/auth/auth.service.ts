@@ -7,6 +7,7 @@ import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 import { AuthDto } from './dto/auth.dto';
 import { UserModel } from '../user/user.model';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -26,12 +27,15 @@ export class AuthService {
     };
   }
 
-  async register({ email, password }: AuthDto) {
+  async register({ email, password, birthdate }: RegisterDto) {
+   
     const salt = await genSalt(10);
+   
     const newUser = new this.UserModel({
       email,
       password: await hash(password, salt),
       username: email.slice(0, email.indexOf('@')),
+      birthdate,
     });
     const user = await newUser.save();
 
@@ -92,8 +96,10 @@ export class AuthService {
     return {
       _id: user._id,
       email: user.email,
-      isAdmin: user.isAdmin,
+      /* isAdmin: user.isAdmin,*/
       username: user.username,
+      roles: user.roles,
+      birthdate: user.birthdate,
     };
   }
 }

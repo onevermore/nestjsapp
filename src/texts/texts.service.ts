@@ -13,8 +13,16 @@ export class TextsService {
     private readonly textsModel: ModelType<TextsModel>, // @Inject(forwardRef(() => CoursesService)) // private readonly courseService: CoursesService,
   ) {}
 
-  async getAllTexts(): Promise<any> {
-    return this.textsModel.find().exec();
+  async getAllTexts(page = 1, limit = 10): Promise<any> {
+    const texts = await this.textsModel
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    const total = await this.textsModel.countDocuments().exec();
+    const totalPages = Math.ceil(total / limit);
+    return { texts, total, totalPages, page };
+    // return this.textsModel.find().exec();
   }
 
   async create(createTextDto: CreateTextDto): Promise<TextsModel> {

@@ -13,9 +13,10 @@ export class OnlyAdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<{ user: UserModel }>();
     const user = request.user;
+    console.log('user DATA ===== ', user);
+    /*  if (!user?.isAdmin) throw new ForbiddenException('Onky for admins!');
 
-    if (!user.isAdmin) throw new ForbiddenException('Onky for admins!');
-
-    return user.isAdmin;
+    return user?.isAdmin;*/
+    return false;
   }
 }

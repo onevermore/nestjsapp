@@ -1,33 +1,48 @@
 import { prop, Ref } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { UserModel } from 'src/user/user.model';
 
 export interface CoursesModel extends Base {}
 
-/*
-export class Dictionary {
+export class UserData {
   @prop()
-  word: string;
+  userId: Ref<UserModel>;
 
   @prop()
-  translation: string;
+  username: string;
 }
-*/
+
+export enum Niveau {
+  'A1' = 'A1',
+  'A2' = 'A2',
+  'B1' = 'B1',
+  'B2' = 'B2',
+  'C1' = 'C1',
+  'C2' = 'C2',
+}
+
 export class CoursesModel extends TimeStamps {
-  @prop()
+  @prop({ required: true })
   title: string;
 
-  @prop()
+  @prop({ unique: true, required: true, trim: true })
   slug: string;
 
   @prop()
   description: string;
 
-  @prop()
-  level: string;
+  @prop({ enum: Niveau })
+  level: Niveau;
 
   @prop({ default: 0 })
   price: number;
 
-  // @prop({ default: [] })
-  // dictionary: Dictionary;
+  @prop({ _id: false })
+  allowedUsers?: UserData[];
+
+  @prop({ default: true })
+  isPublic: boolean;
+
+  @prop({ ref: () => UserModel })
+  ownerId: Ref<UserModel>;
 }

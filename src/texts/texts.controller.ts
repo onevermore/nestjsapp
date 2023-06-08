@@ -8,12 +8,21 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiParam } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 import { Auth } from 'src/auth/decorators/auth.decorator';
+
+import { OnlyAdminGuard } from 'src/auth/guards/admin.guard';
+
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/user/decorators/roles.decorator';
+import { Role } from 'src/user/enums/role.enum';
 import { CreateTextDto } from './dto/create-text.dto';
 import { IdValidationPipe } from './pipes/id.validation.pipe';
 import { TextsModel } from './texts.model';
@@ -26,8 +35,11 @@ export class TextsController {
 
   @ApiOperation({ summary: 'Get all texts' })
   @Get()
-  async getAllTexts() {
-    return this.textsService.getAllTexts();
+  async getAllTexts(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.textsService.getAllTexts(page, limit);
   }
 
   @ApiOperation({ summary: 'Get texts by Id' })
@@ -82,7 +94,8 @@ export class TextsController {
   @UsePipes(new ValidationPipe())
   @Put(':id')
   @HttpCode(200)
-  @Auth('admin')
+  @Roles('admin', 'super')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id', IdValidationPipe) id: string,
     @Body() dto: CreateTextDto,
@@ -93,7 +106,9 @@ export class TextsController {
   }
 
   @Delete(':id')
-  @Auth('admin')
+  @Roles('admin', 'super')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@Auth('admin')
   async delete(@Param('id', IdValidationPipe) id: string) {
     const deletedDoc = await this.textsService.delete(id);
     if (!deletedDoc) throw new NotFoundException('Text not found');
