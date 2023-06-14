@@ -14,11 +14,11 @@ export class DictionaryModel extends TimeStamps {
   @prop({ ref: () => CoursesModel })
   courseId: Ref<CoursesModel>;
 
-  @ApiProperty({
+  /*@ApiProperty({
     example: 'Level',
     description: 'Level of course where this word was',
   })
-
+*/
   /*
   @prop()
   level: string;

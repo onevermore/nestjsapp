@@ -1,14 +1,29 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { Types } from 'mongoose';
 import { DictionaryModel } from './dictionary.model';
 import { DictionaryService } from './dictionary.service';
 import { AddWordToDictionaryDto } from './dto/add-word.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/user/decorators/roles.decorator';
+import { IdValidationPipe } from 'src/texts/pipes/id.validation.pipe';
+import { CanDeleteWordGuard } from 'src/auth/guards/canDeleteWord.guard';
 
 @Controller('dictionary')
 export class DictionaryController {
   constructor(private readonly dictionaryService: DictionaryService) {}
 
-  @Get(':userId/all-words')
+  @Get('all-words/:userId')
   async getUserWords(
     @Param('userId') userId: Types.ObjectId,
   ): Promise<DictionaryModel[]> {
@@ -30,7 +45,19 @@ export class DictionaryController {
 
   @Post('add-word')
   @HttpCode(200)
-  async create(@Body() dto: AddWordToDictionaryDto) {
+  // @Roles('user')
+  @UseGuards(JwtAuthGuard)
+  async addWordToDictionry(@Body() dto: AddWordToDictionaryDto) {
     return await this.dictionaryService.addWordToDictionary(dto);
+  }
+
+  @Delete(':userId/words/:wordId')
+  @UseGuards(JwtAuthGuard, CanDeleteWordGuard)
+  async deleteWord(
+    @Param('userId', IdValidationPipe) userId: string,
+    @Param('wordId', IdValidationPipe) wordId: string,
+  ) {
+    const deletedDoc = await this.dictionaryService.deleteWord(wordId);
+    if (!deletedDoc) throw new NotFoundException('Word not found');
   }
 }
