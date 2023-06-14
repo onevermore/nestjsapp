@@ -31,9 +31,14 @@ export class DictionaryService {
   }
 
   async getWordsByTextForUser(textId: Types.ObjectId, userId: Types.ObjectId) {
-    const a = await this.dictionaryModel.find({ userId, textId }).exec();
+    const queryCond = {
+      ...(textId && { textId }),
+      userId,
+    };
 
-    return this.dictionaryModel.find({ userId, textId }).exec();
+    // const a = await this.dictionaryModel.find({ userId, textId }).exec();
+
+    return this.dictionaryModel.find(queryCond).exec();
   }
 
   async deleteWord(
