@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { DictionaryModel } from './dictionary.model';
@@ -31,10 +32,10 @@ export class DictionaryController {
     return userWords;
   }
 
-  @Get(':textId/words/:userId')
+  @Get(':userId/words')
   async getWordsByTextForUser(
-    @Param('textId') textId: Types.ObjectId,
     @Param('userId') userId: Types.ObjectId,
+    @Query('textId') textId?: Types.ObjectId,
   ): Promise<DictionaryModel[]> {
     const userWords = await this.dictionaryService.getWordsByTextForUser(
       textId,
