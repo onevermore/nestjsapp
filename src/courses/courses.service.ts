@@ -57,8 +57,25 @@ export class CoursesService {
     return { courses, total, totalPages, page };
   }
 
-  async getById(courseId: Types.ObjectId): Promise<DocumentType<CoursesModel>> {
-    return this.coursesModel.findById({ id: courseId }).exec();
+  async getById(courseId: Types.ObjectId): Promise<any> {
+    const courseById = await this.coursesModel
+      .findById({ _id: courseId })
+      .exec();
+
+    const courseTexts = await this.textsService.byCourse(courseById._id);
+    const courseCrosswords = await this.crosswordService.byCourse(
+      courseById._id,
+    );
+
+    const result = {
+      _id: String(courseById._id),
+      title: courseById.title,
+      level: courseById.level,
+      description: courseById.description,
+      texts: courseTexts,
+      crosswords: courseCrosswords,
+    };
+    return result;
   }
 
   async getByUser(
