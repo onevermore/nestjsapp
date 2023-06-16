@@ -38,6 +38,11 @@ export class CoursesController {
     return this.coursesService.getAllCourses(searchTerm, level, page, limit);
   }
 
+  @Get(':id')
+  async getById(@Param('id') courseId: Types.ObjectId) {
+    return this.coursesService.getById(courseId);
+  }
+
   @ApiOperation({ summary: 'Create course' })
   @Post()
   @HttpCode(200)

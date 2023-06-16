@@ -2,8 +2,6 @@ import { prop, Ref } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { UserModel } from 'src/user/user.model';
 
-export interface CoursesModel extends Base {}
-
 export class UserData {
   @prop()
   userId: Ref<UserModel>;
@@ -20,6 +18,8 @@ export enum Niveau {
   'C1' = 'C1',
   'C2' = 'C2',
 }
+
+export interface CoursesModel extends Base {}
 
 export class CoursesModel extends TimeStamps {
   @prop({ required: true })
