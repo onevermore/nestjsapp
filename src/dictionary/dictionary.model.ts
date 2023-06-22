@@ -11,7 +11,7 @@ export class DictionaryModel extends TimeStamps {
   //@prop({ ref: () => CoursesModel })
   userId: Ref<UserModel>;
 
-  @prop({ ref: () => CoursesModel })
+  @prop({ ref: () => CoursesModel, required: true })
   courseId: Ref<CoursesModel>;
 
   /*@ApiProperty({
@@ -26,7 +26,7 @@ export class DictionaryModel extends TimeStamps {
   @prop({ ref: TextsModel, required: true })
   textId: Ref<TextsModel>;
 
-  @prop({ unique: true, required: true })
+  @prop({ required: true })
   word: string;
 
   @prop({ required: true })

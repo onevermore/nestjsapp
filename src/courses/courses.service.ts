@@ -13,7 +13,7 @@ import { TextsService } from 'src/texts/texts.service';
 import { UserService } from 'src/user/user.service';
 import { CoursesModel, Niveau } from './courses.model';
 import { CreateCourseDto } from './dto/create-course.dto';
-
+import { v4 as uuidv4 } from 'uuid';
 export interface CourseData {
   courses: DocumentType<CoursesModel>[];
   total: number;
@@ -49,10 +49,12 @@ export class CoursesService {
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();
-    const total = await this.coursesModel.countDocuments().exec();
+
+    const total = await this.coursesModel.countDocuments(queryCond).exec();
 
     if (!limit) limit = 10;
-    const totalPages = Math.ceil(total / limit);
+    let totalPages = Math.ceil(total / limit);
+    if (totalPages === 0) totalPages = 1;
 
     return { courses, total, totalPages, page };
   }
@@ -84,6 +86,10 @@ export class CoursesService {
     return this.coursesModel.find({ ownerId: userId }).exec();
   }
 
+  async findBySlug(slug: string): Promise<DocumentType<CoursesModel>> {
+    return this.coursesModel.findOne({ slug }).exec();
+  }
+
   async createEmptyCourseId(): Promise<Types.ObjectId> {
     const defaultValue: CreateCourseDto = {
       title: '',
@@ -101,8 +107,16 @@ export class CoursesService {
   async create(createCourseDto: CreateCourseDto): Promise<CoursesModel> {
     // createCourseDto.price = Number(createCourseDto[price]);
 
-    const { allowedUsers, level } = createCourseDto;
-    if (!Object.values(Niveau).includes(level as Niveau)) {
+    let { allowedUsers, slug, ...courseData } = createCourseDto;
+
+    const existingSlug = await this.findBySlug(slug);
+    if (existingSlug) {
+      // If the slug exists, append a unique ID or a random string to make it unique
+      const uniqueId = uuidv4(); // Generate a unique ID using UUID library
+      slug += `-${uniqueId}`;
+    }
+
+    if (!Object.values(Niveau).includes(courseData.level as Niveau)) {
       throw new BadRequestException('Invalid level value');
     }
     // Check if all usernames exist in User collection
@@ -119,12 +133,16 @@ export class CoursesService {
       );
     }
     // collect users' data
-    const usersData = users.map((user) => ({
+    const usersData = users?.map((user) => ({
       userId: user._id,
       username: user.username,
     }));
 
-    const newCourseData = { ...createCourseDto, allowedUsers: usersData };
+    const newCourseData = {
+      ...courseData,
+      ...(!courseData.isPublic && { allowedUsers: usersData }),
+      slug,
+    };
 
     return new this.coursesModel(newCourseData).save();
   }

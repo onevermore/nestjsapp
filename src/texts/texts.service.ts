@@ -19,8 +19,12 @@ export class TextsService {
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();
+
+    //  const total = await this.coursesModel.countDocuments(queryCond).exec();
+
     const total = await this.textsModel.countDocuments().exec();
-    const totalPages = Math.ceil(total / limit);
+    let totalPages = Math.ceil(total / limit);
+    if (totalPages === 0) totalPages = 1;
     return { texts, total, totalPages, page };
     // return this.textsModel.find().exec();
   }
