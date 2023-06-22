@@ -36,6 +36,12 @@ export class UserController {
   async byUsername(@Param('username') username: string) {
     return this.userService.byUsername(username);
   }
+
+  @Get('check-username/:username')
+  async checkUsernameAvailability(@Param('username') username: string) {
+    return this.userService.checkUsernameAvailability(username);
+  }
+
   /*
   @UsePipes(new ValidationPipe())
   @Put(':id')

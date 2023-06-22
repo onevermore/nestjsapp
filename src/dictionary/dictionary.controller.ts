@@ -9,7 +9,9 @@ import {
   Post,
   UseGuards,
   Query,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { Types } from 'mongoose';
 import { DictionaryModel } from './dictionary.model';
 import { DictionaryService } from './dictionary.service';
@@ -48,17 +50,22 @@ export class DictionaryController {
   @HttpCode(200)
   // @Roles('user')
   @UseGuards(JwtAuthGuard)
-  async addWordToDictionry(@Body() dto: AddWordToDictionaryDto) {
+  async addWordToDictionry(
+    @Body() dto: AddWordToDictionaryDto,
+    // @Req() req: Request,
+  ) {
+    //   const userId: Types.ObjectId = (req.user as any)._id;
+    //    console.log('req === ', (req.user as any)._id);
     return await this.dictionaryService.addWordToDictionary(dto);
   }
 
   @Delete(':userId/words/:wordId')
-  @UseGuards(JwtAuthGuard, CanDeleteWordGuard)
+  @UseGuards(JwtAuthGuard)
   async deleteWord(
     @Param('userId', IdValidationPipe) userId: string,
     @Param('wordId', IdValidationPipe) wordId: string,
   ) {
-    const deletedDoc = await this.dictionaryService.deleteWord(wordId);
+    const deletedDoc = await this.dictionaryService.deleteWord(wordId, userId);
     if (!deletedDoc) throw new NotFoundException('Word not found');
   }
 }

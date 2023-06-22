@@ -18,7 +18,15 @@ export class UserService {
 
   async byUsername(username: string): Promise<any> {
     const userByUsername = await this.userModel.findOne({ username }).exec();
-    return userByUsername;
+  }
+
+  async checkUsernameAvailability(
+    username: string,
+  ): Promise<{ available: boolean }> {
+    const user = await this.userModel.findOne({ username }).exec();
+    //  if (userByUsername) throw new NotFoundException(`Username already exists`);
+
+    return { available: !user };
   }
 
   async uploadAvatar(

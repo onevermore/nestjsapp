@@ -34,7 +34,6 @@ export class AuthController {
   @Post('register')
   async register(@Body() dto: RegisterDto) {
    
-
     const regData = {
       ...dto,
       birthdate: new Date(dto.birthdate),

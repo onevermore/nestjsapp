@@ -27,14 +27,14 @@ export class AuthService {
     };
   }
 
-  async register({ email, password, birthdate }: RegisterDto) {
-   
+  async register({ email, password, birthdate, username }: RegisterDto) {
     const salt = await genSalt(10);
-   
+
     const newUser = new this.UserModel({
       email,
       password: await hash(password, salt),
-      username: email.slice(0, email.indexOf('@')),
+      username,
+      //username: email.slice(0, email.indexOf('@')),
       birthdate,
     });
     const user = await newUser.save();
@@ -66,6 +66,10 @@ export class AuthService {
 
   async findByEmail(email: string) {
     return this.UserModel.findOne({ email }).exec();
+  }
+
+  async findByUsername(username: string) {
+    return this.UserModel.findOne({ username }).exec();
   }
 
   async validateUser(email: string, password: string): Promise<UserModel> {
